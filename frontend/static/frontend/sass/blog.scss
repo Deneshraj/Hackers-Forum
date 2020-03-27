@@ -1,0 +1,21 @@
+.blog-container {
+    border: 1px solid #aaaaaa;
+    margin: 2rem 0;
+    padding: 2rem;
+    border-radius: 0.2rem;
+    box-shadow: 0 0 0.2rem #aaaaaa;
+}
+
+.blog-heading {
+    border-bottom: 1px solid #aaa;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.blog-btns .btn {
+    margin-right: 2rem;
+}
+
+.blog-btns .btn:nth-child(2) {
+    margin-right: 0;
+}

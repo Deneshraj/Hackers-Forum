@@ -1,0 +1,1 @@
+import AuthComponent from './components/AuthComponent'

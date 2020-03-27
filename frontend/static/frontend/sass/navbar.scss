@@ -1,0 +1,25 @@
+// Color sets
+$primary-bg-color: #1818bb;
+$secondary-bg-color: #565656;
+$color-bg-green: #118034;
+$color-bg-violet: #561180;
+$color-bg-aqua: #117f80;
+
+
+.fixed-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: $primary-bg-color !important;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.7);
+}
+
+.header {
+    margin-bottom: 7rem;
+}
+
+.nav-link, .navbar-brand {
+    text-transform: uppercase;
+    font-weight: bold;
+}
