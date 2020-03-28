@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import AddBlog from './AddBlog';
 import ViewBlogs from './ViewBlogs';
-import { getCookie } from '../auth/Login';
+import { getCookie } from '../common/Cookies';
+import UpdateBlog from './UpdateBlog';
+import Loading from '../common/Loading';
 
 export default class Blogs extends Component {
     constructor(props) {
@@ -9,13 +11,14 @@ export default class Blogs extends Component {
         this.state = {
             blogs: [],
             errors: null,
-            isError: false
+            isError: false,
+            modifyComponent: (<AddBlog fetchBlogs={this.fetchBlogs} />)
         }
-        this.modifyComponent = (<AddBlog fetchBlogs={this.fetchBlogs} />);
 
         this.fetchBlogs = this.fetchBlogs.bind(this);
         this.updateBlog = this.updateBlog.bind(this);
         this.deleteBlog = this.deleteBlog.bind(this);
+        this.changeBlogInState = this.changeBlogInState.bind(this);
         this.fetchBlogs();
     }
 
@@ -40,34 +43,24 @@ export default class Blogs extends Component {
         xhttp.send();
     }
 
-    updateBlog = (blog) => {
-        const updateBlogInState = (updatedBlog) => {
-            this.setState({
-                blogs: this.state.blogs.map((blog) => {
-                if(blog.id == id) {
+    changeBlogInState(updatedBlog) {
+        this.setState({
+            blogs: this.state.blogs.map((blog) => {
+                if(blog.id === updatedBlog.id) {
                     return updatedBlog
                 }
                 return blog;
-                }) 
-            });
-        }
-
-        let xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if(this.readyState == 4) {
-                let response = JSON.parse(this.responseText);
-                if(this.status == 201) {
-                    // updateBlogInState(JSON.parse(this.responseText.blog));
-                    console.log(response);
-                }
-                else console.log(response); 
-            }
-        }
-
-        xhttp.open('PUT', '/api/blogs/update/', true);
-        xhttp.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
-        xhttp.send(JSON.stringify({ blog: blog }));
+            }),
+            modifyComponent: (<AddBlog fetchBlogs={this.fetchBlogs} />)
+        });
+        
     }
+
+    updateBlog = (id) => {
+        let blog = this.state.blogs.filter((blog) => blog.id === id)[0];
+        this.setState({ modifyComponent: (<Loading />) });
+        setTimeout(() => this.setState({ modifyComponent: (<UpdateBlog blog={blog} changeBlogInState={this.changeBlogInState.bind(this)}  />) }), 300);
+    } 
 
     deleteBlog = (id) => {
         const removeBlogFromState = () => {
@@ -83,7 +76,7 @@ export default class Blogs extends Component {
 
         xhttp.open('DELETE', '/api/blogs/delete/', true);
         xhttp.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
-        xhttp.send(JSON.stringify({ 'blog_id': blogs.id, blogs }));
+        xhttp.send(JSON.stringify({ 'blog_id': id }));
     }
     
     render() {
@@ -91,7 +84,7 @@ export default class Blogs extends Component {
             <div>
                 <h1 className="text-center bold">Welcome to Hacker's Forum!</h1>
                 <div className="container">
-                    {this.modifyComponent}
+                    {this.state.modifyComponent}
                     <ViewBlogs fetchBlogs={this.fetchBlogs} updateBlog={this.updateBlog} deleteBlog={this.deleteBlog} blogs={this.state.blogs} />
                 </div>
             </div>

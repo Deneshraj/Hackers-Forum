@@ -13,6 +13,7 @@ $color-bg-aqua: #117f80;
     width: 100%;
     background: $primary-bg-color !important;
     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.7);
+    z-index: 1000;
 }
 
 .header {

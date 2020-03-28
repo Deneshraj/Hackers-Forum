@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getCookie } from '../auth/Login';
+import { getCookie } from '../common/Cookies';
 import Loading from '../common/Loading';
 
 const logout = () => {

@@ -7,27 +7,35 @@ from .serializer import UserSerializer
 from decorators.login_required import login_required
 import json
 from .authtoken import *
+import os
+import binascii
 
 @csrf_protect
 def login(request):
-    if request.method == "POST":
-        post_data = json.loads(request.body)
-        username = post_data["username"]
-        password = post_data["password"]
-        password = hashlib.sha256(password.encode()).hexdigest()
+    try:
+        if request.method == "POST":
+            post_data = json.loads(request.body)
+            username = post_data["username"]
+            password = post_data["password"]
+            password = hashlib.sha256(password.encode()).hexdigest()
 
-        user = User.objects.filter(username=username, password=password)
-        if is_user_exist(user):
-            user = user.first()
-            serialized_user = UserSerializer(user, many=False)
-            
-            token = generate_token(str(user.id))
-            response =  JsonResponse(serialized_user.data, safe=False)
-            response.set_cookie("auth_token", token, max_age=365 * 24 * 60 * 60)
-            return response
-        else:
-            return JsonResponse({"error": "Invalid Username or Password!"}, safe=False, status=400)
-
+            user = User.objects.filter(username=username, password=password)
+            if is_user_exist(user):
+                user = user.first()
+                serialized_user = UserSerializer(user, many=False)
+                
+                token = generate_token()
+                user.token = token
+                user.save()
+                response =  JsonResponse(serialized_user.data, safe=False)
+                response.set_cookie("auth_token", token, max_age=365 * 24 * 60 * 60)
+                return response
+            else:
+                return JsonResponse({"error": "Invalid Username or Password!"}, safe=False, status=400)
+    except KeyError:
+        return JsonResponse({ 'error': "Please provide all the fields" }, status=400)
+    except Exception as e:
+        return JsonResponse({ 'error': 'Internal Server Error!' }, status=500)
     else:
         return JsonResponse({ 'error': "Invalid Method" }, status=400)
 
@@ -63,7 +71,7 @@ def create_user(request):
                 user.password = password
                 user.save()
 
-                token = generate_token(str(user.id))
+                token = generate_token()
                 response = JsonResponse({ 'msg': "<h1>User created Successfully!" }, status=200)
                 response.set_cookie("auth_token", token, max_age=365 * 24 * 60 * 60)
                 return response

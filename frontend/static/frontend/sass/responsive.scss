@@ -1,0 +1,27 @@
+@media only screen and (max-width: 450px) {
+    .h1, h1 {
+        font-size: 1.5rem;
+    }
+
+    .add-form {
+        padding: 1.5rem;
+        border: 1px solid #aaa;
+        border-radius: 0.2rem;
+        margin-top: 3rem;
+    }
+    .user-form {
+        width: 85%;
+        max-width: 30rem;
+        margin: 1rem auto;
+    }
+}
+
+
+@media only screen and (max-width: 800px) {
+    .navbar-dark .navbar-toggler {
+        color: rgba(255,255,255,.5);
+        outline: none !important;
+        border: none;
+        border-color: rgba(255,255,255,.1);
+    }
+}

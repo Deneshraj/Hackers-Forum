@@ -1,28 +1,55 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import { getCookie } from '../common/Cookies';
 
 export default class UpdateBlog extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: "",
-            content: ""
+            id: this.props.blog.id,
+            title: this.props.blog.title,
+            content: this.props.blog.content
         };
 
         this.changeValues = this.changeValues.bind(this);
+    }
+
+    componentDidMount() {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
     }
 
     changeValues(e) {
         this.setState({ [e.target.name]: e.target.value });
     }
 
-    updateBlog() {
-        this.props.updateBlog({
+    updateBlog = (e) => {
+        e.preventDefault();
+        let blog =  {
+            id: this.state.id,
             title: this.state.title,
             content: this.state.content
-        });
-        
-        <Redirect to="/blogs" />
+        }
+        const updateBlogInState = (updatedBlog) => {
+            this.props.changeBlogInState(updatedBlog);
+        }
+
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if(this.readyState == 4) {
+                let response = JSON.parse(this.responseText);
+                if(this.status == 201) {
+                    updateBlogInState(response.msg);
+                }
+                else console.log(response); 
+            }
+        }
+
+        xhttp.open('PUT', '/api/blogs/update/', true);
+        xhttp.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+        xhttp.send(JSON.stringify({ blog: blog }));
     }
 
     render() {

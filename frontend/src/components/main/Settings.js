@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { getCookie } from '../auth/Login';
+import { getCookie } from '../common/Cookies';
 import Loading from '../common/Loading';
-import { alertError } from '../auth/Login'; 
+import { alertError } from '../common/Alerts'; 
 
 export const alertMessage = (msg) => {
     var alert = document.getElementById("successAlert");
@@ -101,7 +101,8 @@ export default class Settings extends Component {
             <div className="user">
                 <div className="alert alert-success cust-alert" id="successAlert" role="alert"></div>
                 <div className="alert alert-danger cust-alert" id="alert" role="alert"></div>
-                <form onSubmit={this.updateUser} className="user-form">
+                <form onSubmit={this.updateUser} className="user-form add-form">
+                    <h2 className="text-center">User Details</h2>
                     <div className="form-group">
                         <label htmlFor="firstName">First Name</label>
                         <input type="text" className="form-control" name="first_name" id="firstName" value={this.state.firstName} onChange={this.updateState} />

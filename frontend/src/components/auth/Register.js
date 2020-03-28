@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getCookie } from './Login';
+import { getCookie } from '../common/Cookies';
 
 const sendData = () => {
     var firstName = document.getElementById("first_name").value;

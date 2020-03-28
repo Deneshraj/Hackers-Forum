@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ViewBlogs from './ViewBlogs';
-import { getCookie } from '../auth/Login';
+import { getCookie } from '../common/Cookies';
 
 export default class Index extends Component {
     constructor(props) {

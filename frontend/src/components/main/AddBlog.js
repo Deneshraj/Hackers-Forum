@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getCookie } from '../auth/Login';
+import { getCookie } from '../common/Cookies';
 
 export default class AddBlog extends Component {
     constructor(props) {

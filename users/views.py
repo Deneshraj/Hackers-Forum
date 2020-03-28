@@ -17,7 +17,7 @@ def get_user(request, *args, **kwargs):
     if(request.method == "POST"):
         try:
             auth_token = request.COOKIES.get('auth_token')
-            user = User.objects.filter(id=fetch_token(auth_token)).first()
+            user = User.objects.filter(token=auth_token).first()
             serialized_user = UserSerializer(user, many=False)
             return JsonResponse({ 'msg': serialized_user.data }, status=201)
         except Exception as e:
@@ -46,8 +46,8 @@ def update_user(request, *args, **kwargs):
 
         if(isValid):
             try:
-                user_id = fetch_token(request.COOKIES.get('auth_token'))
-                user = User.objects.filter(id=user_id)
+                token = request.COOKIES.get('auth_token')
+                user = User.objects.filter(token=token)
 
                 if not is_user_exist(user):
                     response = JsonResponse({ 'error': "User not found! Logging out..." }, status=400)

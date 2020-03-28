@@ -30,10 +30,10 @@
     stroke-width: 10;
     stroke: #00f;
     stroke-linecap: round;
-    transform: translate(25%,25%);
+    transform: translate(25%, 25%);
     stroke-dasharray: 275;
     stroke-dashoffset: 275;
-    animation: circle-animation 2s cubic-bezier(0.4, 0, 1, 1) infinite;
+    animation: circle-animation 1s cubic-bezier(0.4, 0, 1, 1) infinite;
 }
 
 @keyframes circle-animation {

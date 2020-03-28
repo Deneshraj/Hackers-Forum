@@ -1,16 +1,18 @@
-import random
+import os
+import binascii
+from users.models import User
 
-separators = [",", "!", "@", "#", "$", "&", "."]
-
-def generate_token(id):
-    id_list = id.split("-")
+def generate_token():
+    unique_token = False
     token = ""
-    token += id_list[0]
-    for part in id_list[1:]:
-        token += separators[random.randint(0, 6)] + part
+
+    while not unique_token:
+        token += binascii.hexlify(os.urandom(64)).decode()
+        users = User.objects.filter(token=token)
+
+        if len(users) > 0:
+            continue
+        else:
+            unique_token = True
 
     return token
-
-def fetch_token(token):
-    separated_list = [token[:8], token[9:13], token[14:18], token[19:23], token[24:]]
-    return "-" .join(separated_list)

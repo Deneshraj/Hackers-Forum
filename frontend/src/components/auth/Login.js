@@ -1,18 +1,6 @@
 import React, { Component } from 'react';
-
-export const getCookie = (name) => {
-    if(document.cookie && document.cookie !== "") {
-        var cookies = document.cookie.split(';');
-        for(var i = 0; i < cookies.length; i++) {
-            var ck = cookies[i].split("=");
-            if(ck[0] === name) return ck[1];
-        }
-
-        return null;
-    } else {
-        return null;
-    }
-}
+import { alertError } from '../common/Alerts';
+import { getCookie } from '../common/Cookies';
 
 const sendData = () => {
     var username = document.getElementById("username").value;
@@ -33,30 +21,6 @@ const sendData = () => {
     xmlHttp.setRequestHeader('X-CSRFToken', csrftoken);
     xmlHttp.setRequestHeader("Content-type", "application/json");
     xmlHttp.send(JSON.stringify({ "username": username, "password": password }));
-}
-
-export const alertError = (error) => {
-    var alert = document.getElementById("alert");
-    alert.innerHTML = error;
-    alert.style.display = "block";
-    alert.style.opacity = 1;
-
-    setTimeout(() => {
-        console.log("timeout1 before");
-        var fadeEffect = setInterval(function () {
-            if(!alert.style.opacity) {
-                alert.style.opacity = 1;
-            }
-            if(alert.style.opacity > 0) {
-                alert.style.opacity -= 0.1;
-            } else {
-                clearInterval(fadeEffect);
-                alert.innerHTML = "";
-                alert.style.display = "none";
-                console.log("timeout1 after");
-            }
-        }, 60);
-    }, 3000);
 }
 
 export default class Login extends Component {
