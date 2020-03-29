@@ -1,6 +1,40 @@
+@mixin fit-content-width() {
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: -ms-fit-content;
+    width: -o-fit-content;
+    width: fit-content;
+}
+
+@mixin fit-content-height() {
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: -ms-fit-content;
+    height: -o-fit-content;
+    height: fit-content;
+}
+
 * {
     font-family: Arial, Helvetica, sans-serif;
 }
+
+body {
+    background-color: #243ebb17;
+}
+
+.containers {
+    margin: 1rem auto;
+    background: #ffffffb3;
+    padding: 2rem;
+}
+
+.aside {
+    margin: 1rem;
+    background: #fff;
+    @include fit-content-height();
+    padding: 1rem;
+}
+
 
 @import 'general.scss';
 @import 'auth.scss';

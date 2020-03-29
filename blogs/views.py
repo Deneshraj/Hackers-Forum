@@ -6,9 +6,11 @@ from . import serializer
 from . import models
 import json
 from authentication.authtoken import *
-from users.models import User
+from users.models import User, AuthToken
 from authentication.views import is_user_exist
 import uuid
+from datetime import datetime
+import traceback
 
 Blog = models.Blog
 BlogSerializer = serializer.BlogSerializer
@@ -26,10 +28,11 @@ def add_blog(request, *args, **kwargs):
             auth_token = request.COOKIES.get('auth_token')
             blog = Blog()
 
-            user = User.objects.filter(token=auth_token)
+            tokens = AuthToken.objects.filter(token=auth_token)
 
-            if(is_user_exist(user)):
-                blog.user = user.first()
+            if(is_user_exist(tokens)):
+                user = tokens.first().user
+                blog.user = user
                 blog.title = title
                 blog.content = content
 
@@ -68,8 +71,7 @@ def fetch_blogs(request, *args, **kwargs):
 @csrf_protect
 def fetch_user_blogs(request, *args, **kwargs):
     if request.method == 'GET':
-        print(request.COOKIES)
-        user = User.objects.filter(token=request.COOKIES.get("auth_token")).first()
+        user = AuthToken.objects.filter(token=request.COOKIES.get("auth_token")).first().user
         blogs = Blog.objects.filter(user=user)
         serialized_blogs = BlogSerializer(blogs, many=True)
         return JsonResponse(serialized_blogs.data[::-1], safe=False)
@@ -105,7 +107,8 @@ def delete_blog(request, *args, **kwargs):
     if request.method == "DELETE":
         try:
             DELETE = json.loads(request.body)
-            user = user = User.objects.filter(token=request.COOKIES.get("auth_token")).first()
+            token = AuthToken.objects.filter(token=request.COOKIES.get("auth_token")).first()
+            user = token.user
             blog_id = DELETE["blog_id"]
             blog = Blog.objects.filter(user=user, id=blog_id).delete()
 
@@ -123,5 +126,27 @@ def all_blogs(request, *args, **kwargs):
         blogs = Blog.objects.all()
         serialized_blogs = BlogSerializer(blogs, many=True)
         return JsonResponse(serialized_blogs.data[::-1], safe=False)
+    else:
+        return JsonResponse({ "error": "Invalid Method!" }, status=400)
+
+@csrf_protect
+def blog(request, *args, **kwargs):
+    if request.method == 'GET':
+        try:
+            blog_id = request.GET.get("id")
+            blog = Blog.objects.filter(id=uuid.UUID(blog_id))
+            if len(blog) > 0:
+                blog = blog.first()
+                serialized_blog = BlogSerializer(blog, many=False)
+                return JsonResponse({ 'blog': serialized_blog.data }, status=200)
+            else:
+                return JsonResponse({ "error": "Blog not found!" }, status=404)
+        except KeyError:
+            return JsonResponse({ 'error': "Invalid Request" }, status=400)
+        except Exception as e:
+            trace_back = traceback.format_exc()
+            message = str(e) + " " + str(trace_back)
+            print("Error!", message)
+            return JsonResponse({ 'error': "Internal Server Error!" }, status=500)
     else:
         return JsonResponse({ "error": "Invalid Method!" }, status=400)

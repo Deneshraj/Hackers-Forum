@@ -4,6 +4,7 @@ import ViewBlogs from './ViewBlogs';
 import { getCookie } from '../common/Cookies';
 import UpdateBlog from './UpdateBlog';
 import Loading from '../common/Loading';
+import rf from '../../modules/RestFetch';
 
 export default class Blogs extends Component {
     constructor(props) {
@@ -23,24 +24,13 @@ export default class Blogs extends Component {
     }
 
     fetchBlogs = () => {
-        let xhttp = new XMLHttpRequest();
-        var flag = false;
         const setNewState = (blogs) => {
             this.setState({ blogs: blogs })
         }
-        
-        xhttp.onreadystatechange = function() {
-            if(this.readyState == 4) {
-                if(this.status == 200) {
-                    flag = true;
-                    setNewState(JSON.parse(this.responseText));
-                } else console.log(this.responseText)
-            }
-        }
-        
-        xhttp.open('GET', '/api/blogs/user/', true);
-        xhttp.setRequestHeader('X-CSRFToken', getCookie("csrftoken"));
-        xhttp.send();
+
+        rf.get('/api/blogs/user/')
+        .then(blogs => setNewState(blogs))
+        .catch(err => console.error(err))
     }
 
     changeBlogInState(updatedBlog) {
@@ -66,17 +56,10 @@ export default class Blogs extends Component {
         const removeBlogFromState = () => {
             this.setState({ blogs: this.state.blogs.filter((blog) => blog.id !== id) });
         }
-        let xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if(this.readyState == 4) {
-                if(this.status == 201) removeBlogFromState();
-                else console.log(this.responseText); 
-            }
-        }
-
-        xhttp.open('DELETE', '/api/blogs/delete/', true);
-        xhttp.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
-        xhttp.send(JSON.stringify({ 'blog_id': id }));
+        let data = JSON.stringify({ 'blog_id': id });
+        rf.delete('/api/blogs/delete/', data)
+        .then(msg => removeBlogFromState())
+        .catch(err => console.error(err))
     }
     
     render() {

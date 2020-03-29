@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { getCookie } from '../common/Cookies';
+import rf from '../../modules/RestFetch';
 
 export default class AddBlog extends Component {
     constructor(props) {
@@ -19,7 +20,6 @@ export default class AddBlog extends Component {
 
     addBlog(event) {
         event.preventDefault()
-        let xmlHttp = new XMLHttpRequest();
         const fetchUpdated = () => {
             this.setState({
                 title: "",
@@ -27,18 +27,14 @@ export default class AddBlog extends Component {
             })
             this.props.fetchBlogs();
         }
-        xmlHttp.onreadystatechange = function() {
-            if(this.readyState == 4){
-                if(this.status == 201) fetchUpdated();
-                else if(this.status == 400) console.log(this.responseText);
-                else if(this.status == 500) console.log(this.responseText);
-                else console.log(this.responseText);
-            }
-        }
 
-        xmlHttp.open('POST', '/api/blogs/add/', true);
-        xmlHttp.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
-        xmlHttp.send(JSON.stringify({ 'title': this.state.title, "content": this.state.content }));
+        let strData = JSON.stringify({
+            'title': this.state.title,
+            "content": this.state.content
+        });
+        rf.post('/api/blogs/add/', strData)
+        .then(response => fetchUpdated())
+        .catch(err => console.log(err))
     }
 
     render() {

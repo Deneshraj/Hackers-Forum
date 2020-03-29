@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { getCookie } from '../common/Cookies';
 import Loading from '../common/Loading';
 import { alertError } from '../common/Alerts'; 
+import rf from '../../modules/RestFetch';
 
 export const alertMessage = (msg) => {
     var alert = document.getElementById("successAlert");
@@ -43,51 +44,27 @@ export default class Settings extends Component {
     }
 
     fetchUser = () => {
-        var xhttp = new XMLHttpRequest();
-        const setUserState = (user) => {
+        const setUserState = (user, profile_pic) => {
             this.setState({
                 firstName: user.first_name,
                 lastName: user.last_name,
                 username: user.username,
                 email: user.email,
+                profile_pic: profile_pic,
                 active: true
             });
         }
-
-        xhttp.onreadystatechange = function() {
-            if(this.readyState == 4) {
-                if(this.status == 201) setUserState(JSON.parse(this.responseText).msg)
-                else console.log(this.responseText)
-            }
-        }
-
-        xhttp.open('POST', 'api/user/getuser/', true);
-        xhttp.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
-        xhttp.send()
+        rf.post('/api/user/getuser/', {})
+        .then(res => setUserState(res.msg, res.profile_pic))
+        .catch(err => console.error(err))
     }
 
     updateUser = (e) => {
         e.preventDefault();
-        let xhttp = new XMLHttpRequest();
-
-        xhttp.onreadystatechange = function() {
-            if(this.readyState == 4) {
-                const response = JSON.parse(this.responseText);
-                if(this.status == 201) alertMessage(response.msg);
-                else alertError(response.error);
-            }
-        }
-
-        xhttp.open('PUT', 'api/user/update/', true);
-        xhttp.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
-        const data = {
-            first_name: this.state.firstName,
-            last_name: this.state.lastName,
-            username: this.state.username,
-            email: this.state.email
-        }
-        xhttp.send(JSON.stringify(data));
-        e.preventDefault();
+        let formData = new FormData(e.target);
+        rf.post('/api/user/update/', formData)
+        .then(res => alertMessage(res.msg))
+        .catch(err => alertError(err.error))
     }
 
     updateState = (e) => {
@@ -101,7 +78,7 @@ export default class Settings extends Component {
             <div className="user">
                 <div className="alert alert-success cust-alert" id="successAlert" role="alert"></div>
                 <div className="alert alert-danger cust-alert" id="alert" role="alert"></div>
-                <form onSubmit={this.updateUser} className="user-form add-form">
+                <form onSubmit={this.updateUser} id="settingsForm" encType="multipart/form-data" className="user-form add-form">
                     <h2 className="text-center">User Details</h2>
                     <div className="form-group">
                         <label htmlFor="firstName">First Name</label>
@@ -118,6 +95,10 @@ export default class Settings extends Component {
                     <div className="form-group">
                         <label htmlFor="email">Email</label>
                         <input type="email" className="form-control" name="email" id="email" value={this.state.email} onChange={this.updateState} />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="profilePic">Profile Pic</label>
+                        <input type="file" className="form-control" name="profile_pic" id="profilePic" />
                     </div>
 
                     <button type="submit" className="btn btn-primary">Update</button>

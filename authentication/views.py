@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 import hashlib
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
-from users.models import User
+from users.models import User, AuthToken
 from .serializer import UserSerializer
 from decorators.login_required import login_required
 import json
@@ -25,8 +25,12 @@ def login(request):
                 serialized_user = UserSerializer(user, many=False)
                 
                 token = generate_token()
-                user.token = token
-                user.save()
+
+                auth_token = AuthToken()
+                auth_token.user = user
+                auth_token.token = token
+                auth_token.save()
+                
                 response =  JsonResponse(serialized_user.data, safe=False)
                 response.set_cookie("auth_token", token, max_age=365 * 24 * 60 * 60)
                 return response
@@ -72,6 +76,11 @@ def create_user(request):
                 user.save()
 
                 token = generate_token()
+                auth_token = AuthToken()
+                auth_token.user = user
+                auth_token.token = token
+                auth_token.save()
+                
                 response = JsonResponse({ 'msg': "<h1>User created Successfully!" }, status=200)
                 response.set_cookie("auth_token", token, max_age=365 * 24 * 60 * 60)
                 return response

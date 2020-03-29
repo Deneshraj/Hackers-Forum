@@ -1,19 +1,13 @@
 import React, { Component } from 'react'
 import { getCookie } from '../common/Cookies';
 import Loading from '../common/Loading';
+import rf from '../../modules/RestFetch';
 
 const logout = () => {
-    console.log("Logging out!");
-    var xmlHttp = new XMLHttpRequest();
-
-    xmlHttp.onreadystatechange = function() {
-        if(this.readyState == 4) {
-            console.log(this.responseText);
-        }
-    };
-    xmlHttp.open("POST", "/api/auth/logout/", true);
-    xmlHttp.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
-    xmlHttp.send();
+    rf.post('/api/auth/logout/', {})
+    .then(res => console.log(this.responseText))
+    .catch(err => console.log(this.responseText))
+    
     location.replace(location.origin + '/auth/');
 }
 

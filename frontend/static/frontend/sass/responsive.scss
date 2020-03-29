@@ -14,6 +14,10 @@
         max-width: 30rem;
         margin: 1rem auto;
     }
+
+    .containers {
+        padding: 2rem 0rem;
+    }
 }
 
 
@@ -23,5 +27,9 @@
         outline: none !important;
         border: none;
         border-color: rgba(255,255,255,.1);
+    }
+
+    .col-md-hide {
+        display: none;
     }
 }

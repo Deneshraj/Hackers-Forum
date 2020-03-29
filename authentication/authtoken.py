@@ -1,6 +1,6 @@
 import os
 import binascii
-from users.models import User
+from users.models import User, AuthToken
 
 def generate_token():
     unique_token = False
@@ -8,9 +8,9 @@ def generate_token():
 
     while not unique_token:
         token += binascii.hexlify(os.urandom(64)).decode()
-        users = User.objects.filter(token=token)
+        tokens = AuthToken.objects.filter(token=token)
 
-        if len(users) > 0:
+        if len(tokens) > 0:
             continue
         else:
             unique_token = True

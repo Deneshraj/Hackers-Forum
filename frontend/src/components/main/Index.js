@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ViewBlogs from './ViewBlogs';
 import { getCookie } from '../common/Cookies';
+import rf from '../../modules/RestFetch';
 
 export default class Index extends Component {
     constructor(props) {
@@ -13,24 +14,13 @@ export default class Index extends Component {
     }
 
     fetchBlogs = () => {
-        let xhttp = new XMLHttpRequest();
-        var flag = false;
         const setNewState = (blogs) => {
             this.setState({ blogs: blogs })
         }
         
-        xhttp.onreadystatechange = function() {
-            if(this.readyState == 4) {
-                if(this.status == 200) {
-                    flag = true;
-                    setNewState(JSON.parse(this.responseText));
-                } else console.log(this.responseText)
-            }
-        }
-        
-        xhttp.open('GET', '/api/blogs/all/', true);
-        xhttp.setRequestHeader('X-CSRFToken', getCookie("csrftoken"));
-        xhttp.send();
+        rf.get('/api/blogs/all/')
+        .then(blogs => setNewState(blogs))
+        .catch(err => console.log(err))
     }
 
     render() {

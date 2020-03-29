@@ -7,5 +7,6 @@ urlpatterns = [
     path('user/', views.fetch_user_blogs),
     path('update/', views.update_blog),
     path('delete/', views.delete_blog),
-    path('allblogs/', views.all_blogs)
+    path('allblogs/', views.all_blogs),
+    path('blog/', views.blog)
 ]

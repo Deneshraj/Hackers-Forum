@@ -1,5 +1,5 @@
 .add-form {
-    padding: 5rem;
+    padding: 2rem;
     border: 1px solid #aaa;
     border-radius: 0.2rem;
     margin-top: 3rem;
@@ -8,4 +8,27 @@
 .view-form {
     margin-top: 5rem;
     padding: 2rem;
+}
+
+.aside-profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    box-shadow: 0 0 0.15rem #000;
+}
+
+.aside-profile-pic-container {
+    @include fit-content-width();
+    margin: auto;
+}
+
+.aside-username-link {
+    font-size: 1.5rem;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+
+.aside-username {
+    margin-top: 2rem;
 }

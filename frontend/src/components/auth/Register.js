@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { getCookie } from '../common/Cookies';
+import rf from '../../modules/RestFetch';
 
 const sendData = () => {
     var firstName = document.getElementById("first_name").value;
@@ -9,29 +10,18 @@ const sendData = () => {
     var password = document.getElementById("password").value;
     var confirmPassword = document.getElementById("confirm_password").value;
 
-    const csrftoken = getCookie("csrftoken");
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function() {
-        if(this.readyState == 4) {
-            if(this.status == 200) location.replace(location.origin + '/');
-            else if(this.status == 400) {
-                const response = JSON.parse(this.responseText);
-                alertError(response.error);
-            } else console.log("Error occured!");
-        } 
-    };
-
-    xmlHttp.open("POST", '/api/auth/register/');
-    xmlHttp.setRequestHeader('X-CSRFToken', csrftoken);
-    xmlHttp.setRequestHeader("Content-type", "application/json");
-    xmlHttp.send(JSON.stringify({
+    const data = JSON.stringify({
         "first_name": firstName,
         "last_name": lastName,
         "username": username,
         "email": email,
         "password": password,
         "confirm_password": confirmPassword
-    }));
+    });
+
+    rf.post('/api/auth/register/', data)
+    .then(res => location.replace(location.origin + '/'))
+    .catch(err => alertError(err))
 }
 
 const alertError = (error) => {
@@ -76,7 +66,7 @@ export default class Login extends Component {
     render() { 
         return (
             <div className="auth">
-                <h2 className="text-center">Login</h2>
+                <h2 className="text-center">Register</h2>
                 <div className="alert alert-danger cust-alert" id="alert" role="alert"></div>
                 <form noValidate autoComplete="off" onSubmit={this.validate}>
                     <div className="form-group">
@@ -104,7 +94,7 @@ export default class Login extends Component {
                         <input type="password" className="form-control" name="confirm_passwd" id="confirm_password" autoComplete="new-confirmpassword" />
                     </div>
                     <div className="form-group">
-                        <button type="submit" className="btn btn-primary material-btn auth-btn">Login</button>
+                        <button type="submit" className="btn btn-primary material-btn auth-btn">Register</button>
                     </div>
                 </form>
             </div>

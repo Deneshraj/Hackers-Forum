@@ -8,6 +8,13 @@ db.sqlite3
 __pycache__/
 /.vscode/
 
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+assets/
+
 # coverage result
 .coverage
 /coverage/

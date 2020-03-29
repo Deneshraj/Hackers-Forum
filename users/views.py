@@ -7,6 +7,9 @@ from authentication.serializer import UserSerializer
 from . import models
 from authentication.views import is_user_exist
 import json
+from django.http import QueryDict
+from django.core.files.storage import default_storage
+from django.conf import settings
 
 User = models.User
 
@@ -17,9 +20,13 @@ def get_user(request, *args, **kwargs):
     if(request.method == "POST"):
         try:
             auth_token = request.COOKIES.get('auth_token')
-            user = User.objects.filter(token=auth_token).first()
+            user = AuthToken.objects.filter(token=auth_token).first().user
+            print(user.profile_pic)
             serialized_user = UserSerializer(user, many=False)
-            return JsonResponse({ 'msg': serialized_user.data }, status=201)
+            return JsonResponse({
+                'msg': serialized_user.data,
+                "profile_pic": settings.MEDIA_URL + user.profile_pic
+            }, status=201)
         except Exception as e:
             print(e)
             return JsonResponse({ 'msg': 'Error at Server!' }, status=400)
@@ -29,48 +36,91 @@ def get_user(request, *args, **kwargs):
 @csrf_protect
 @login_required
 def update_user(request, *args, **kwargs):
-    if(request.method == 'PUT'):
+    if(request.method == 'POST'):
         try:
-            post_data = json.loads(request.body)
+            post_data = request.POST
             first_name = post_data["first_name"]
             last_name = post_data["last_name"]
             username = post_data["username"]
             email = post_data["email"]
+
+            profile_pic_name = "-" . join(str(request.FILES['profile_pic']).split(" "))
+            default_storage.save(profile_pic_name, request.FILES['profile_pic'])
+            isValid, errors = validate(first_name, last_name, username, email)
+
+            if(isValid):
+                token = request.COOKIES.get('auth_token')
+                tokens = AuthToken.objects.filter(token=token)
+                if len(tokens) > 0:
+                    user = tokens.first().user
+                else:
+                    response = JsonResponse({ 'error': "User not found! Logging out..." }, status=400)
+                    response.delete_cookie('auth_token')
+                    return response
+
+                user.first_name = first_name
+                user.last_name = last_name
+                user.username = username
+                user.email = email
+                user.profile_pic = profile_pic_name
+                user.save()
+
+
+                response = JsonResponse({ 'msg': "User Updated Successfully!" }, status=201)
+                return response
         except KeyError:
             return JsonResponse({ 'error': "Field not found!" }, status=400)
         except Exception as e:
             print(e)
             return JsonResponse({ 'error': "Error occured at server" }, status=500)
-        
-        isValid, errors = validate(first_name, last_name, username, email)
-
-        if(isValid):
-            try:
-                token = request.COOKIES.get('auth_token')
-                user = User.objects.filter(token=token)
-
-                if not is_user_exist(user):
-                    response = JsonResponse({ 'error': "User not found! Logging out..." }, status=400)
-                    response.delete_cookie('auth_token')
-                    return response
-
-                user = user.first()
-                user.first_name = first_name
-                user.last_name = last_name
-                user.username = username
-                user.email = email
-                user.save()
-
-                response = JsonResponse({ 'msg': "User Updated Successfully!" }, status=201)
-                return response
-
-            except Exception as e:
-                print(e)
-                return JsonResponse({ 'error': "Unable to Update User, Please try again Later!" }, status=500)
     else:
         return JsonResponse({ 'error': 'Invalid Method!' }, status=400)
 
+@csrf_protect
+@login_required
+def fetch_user_for_blog(request, *args, **kwargs):
+    if request.method == 'POST':
+        try:
+            post_data = json.loads(request.body)
+            user_id = post_data["user_id"]
+            user = User.objects.filter(id=user_id)
+            if len(user) > 0:
+                user = user.first()
+                return JsonResponse({
+                    'username': user.username,
+                    'profilePic': settings.MEDIA_URL + user.profile_pic
+                }, status=200)
+            else:
+                return JsonResponse({ 'msg': "User not Found!" }, status=400)
+        except KeyError:
+            return JsonResponse({ 'error': "Field not found!" }, status=400)
+        except Exception as e:
+            print(e)
+            return JsonResponse({ 'error': "Error occured at server" }, status=500)
+    else:
+        return JsonResponse({ 'error': 'Invalid Method!' }, status=400)
 
+@csrf_protect
+@login_required
+def get_user_for_aside(request, *args, **kwargs):
+    if request.method == "GET":
+        try:
+            auth_token = request.COOKIES.get('auth_token')
+            tokens = AuthToken.objects.filter(token=auth_token)
+
+            if(len(tokens) > 0):
+                user = tokens.first().user
+                return JsonResponse({
+                    'username': user.username,
+                    'profilePic': settings.MEDIA_URL + user.profile_pic
+                }, status=200)
+            else:
+                return JsonResponse({ 'msg': "User not Found!" }, status=400)
+        except Exception as e:
+            print(e)
+            return JsonResponse({ 'error': "Error occured at server" }, status=500)
+    else:
+        return JsonResponse({ 'error': 'Invalid Method!' }, status=400)
 
 def validate(first_name, last_name, username, email):
     isValid = False

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { getCookie } from '../common/Cookies';
+import rf from '../../modules/RestFetch';
 
 export default class UpdateBlog extends Component {
     constructor(props) {
@@ -36,20 +37,10 @@ export default class UpdateBlog extends Component {
             this.props.changeBlogInState(updatedBlog);
         }
 
-        let xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if(this.readyState == 4) {
-                let response = JSON.parse(this.responseText);
-                if(this.status == 201) {
-                    updateBlogInState(response.msg);
-                }
-                else console.log(response); 
-            }
-        }
-
-        xhttp.open('PUT', '/api/blogs/update/', true);
-        xhttp.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
-        xhttp.send(JSON.stringify({ blog: blog }));
+        let data = JSON.stringify({ blog: blog })
+        rf.put('/api/blogs/update/', data)
+        .then(res => updateBlogInState(res.msg))
+        .catch(err => console.log(err))
     }
 
     render() {

@@ -1,26 +1,17 @@
 import React, { Component } from 'react';
 import { alertError } from '../common/Alerts';
 import { getCookie } from '../common/Cookies';
+import rf from '../../modules/RestFetch';
 
 const sendData = () => {
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
-    const csrftoken = getCookie("csrftoken");
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function() {
-        if(this.readyState == 4) {
-            if(this.status == 200) location.replace(location.origin + '/');
-            else if(this.status == 400) {
-                const response = JSON.parse(this.responseText);
-                alertError(response.error);
-            } else console.log("Error occured!");
-        } 
-    };
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
 
-    xmlHttp.open("POST", '/api/auth/login/');
-    xmlHttp.setRequestHeader('X-CSRFToken', csrftoken);
-    xmlHttp.setRequestHeader("Content-type", "application/json");
-    xmlHttp.send(JSON.stringify({ "username": username, "password": password }));
+    const data = JSON.stringify({ "username": username, "password": password })
+    
+    rf.post('/api/auth/login/', data)
+    .then(res => location.replace(location.origin + '/'))
+    .catch(err => console.error(err))
 }
 
 export default class Login extends Component {
@@ -31,7 +22,6 @@ export default class Login extends Component {
         };
 
         this.validate = this.validate.bind(this);
-        // this.handleSubmit = this.handleSubmit.bind(this);
     }
     
     validate(e) {

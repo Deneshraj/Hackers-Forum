@@ -17,10 +17,14 @@ $color-bg-aqua: #117f80;
 }
 
 .header {
-    margin-bottom: 7rem;
+    margin-bottom: 5rem;
 }
 
 .nav-link, .navbar-brand {
     text-transform: uppercase;
     font-weight: bold;
+}
+
+.fixed-nav a {
+    font-size: 0.9rem;
 }

@@ -1,21 +1,107 @@
 .blog-container {
-    border: 1px solid #aaaaaa;
-    margin: 2rem 0;
-    padding: 2rem;
+    border: 1px solid #a2a2a2;
+    overflow: hidden;
+    margin: 1rem auto;
     border-radius: 0.2rem;
-    box-shadow: 0 0 0.2rem #aaaaaa;
+}
+
+.content-container {
+    display: block;
+    text-decoration: none;
+    color: #000;
+    transition: 0.2s;
+    padding: 1rem;
+}
+
+.content-container:hover,
+.content-container:active,
+.content-container:focus {
+    text-decoration: none;
+    color: #000;
+    background: #1818bb10;
+    cursor: pointer;
 }
 
 .blog-heading {
-    border-bottom: 1px solid #aaa;
+    border-bottom: 1px solid #cecbcb;
     padding-bottom: 1rem;
     margin-bottom: 1rem;
 }
 
 .blog-btns .btn {
-    margin-right: 2rem;
+    border-radius: 0;
+}
+.username {
+    display: block;
 }
 
-.blog-btns .btn:nth-child(2) {
-    margin-right: 0;
+.img-container {
+    float: left;
+    margin-right: 1rem;
+}
+
+.profile-pic {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 1px solid #757474;
+    box-shadow: 0 0 0.2rem #42424266;
+}
+
+textarea.form-control {
+    height: 10rem;
+}
+
+.faded {
+    display: block;
+    color: #9a9a9a;
+}
+
+.blog-title {
+    font-weight: bold;
+    margin: 1rem;
+}
+
+.blog-disp-btns {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    padding: 0.5rem;
+    text-align: center;
+    border-right: 1px solid #aaa;
+    border-top: 1px solid #aaa;
+    transition: 0.2s;
+    outline: none !important;
+}
+
+.blog-disp-btns:hover {
+    background: #1818bb10;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.blog-disp-btns.like:hover {
+    background: #0011ff59;
+}
+
+.blog-disp-btns.comment:hover {
+    background: #14751c26;
+}
+
+.blog-disp-btns.share:hover {
+    background: #5900ff45;
+}
+
+.full-blog {
+    border: 1px solid #a7a7a7;
+    border-radius: 0.2rem;
+    overflow: hidden;
+}
+
+.blog-content {
+    padding: 2rem;
+}
+
+.full-blog .content {
+    padding: 2rem 0;
 }
