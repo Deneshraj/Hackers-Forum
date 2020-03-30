@@ -4,14 +4,12 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from decorators.login_required import login_required
 from authentication.authtoken import *
 from authentication.serializer import UserSerializer
-from . import models
+from .models import *
 from authentication.views import is_user_exist
 import json
 from django.http import QueryDict
 from django.core.files.storage import default_storage
 from django.conf import settings
-
-User = models.User
 
 # Create your views here.
 @csrf_protect

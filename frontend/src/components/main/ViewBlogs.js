@@ -34,14 +34,15 @@ export default class ViewBlogs extends Component {
 
     render() {
         if(this.props.blogs.length > 0) {
+            let blogNum = 0;
             this.component = this.props.blogs.map((blog) => {
                 if(blog.content.length > 300) blog.content = blog.content.substring(0, 300) + "..."
                 if(this.props.deleteBlog) return (
-                    <Blog deleteBlog={this.props.deleteBlog} updateBlog={this.props.updateBlog} key={blog.id} blog={blog} />
+                    <Blog blogNum={blogNum++} deleteBlog={this.props.deleteBlog} updateBlog={this.props.updateBlog} key={blog.id} blog={blog} />
                     )
                 else {
                     return (
-                    <Blog key={blog.id} blog={blog} />
+                    <Blog blogNum={blogNum++} key={blog.id} blog={blog} />
                     )
                 }
             });

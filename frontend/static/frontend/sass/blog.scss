@@ -70,10 +70,10 @@ textarea.form-control {
     text-align: center;
     border-right: 1px solid #aaa;
     border-top: 1px solid #aaa;
+    border-bottom: 1px solid #aaa;
     transition: 0.2s;
     outline: none !important;
 }
-
 .blog-disp-btns:hover {
     background: #1818bb10;
     cursor: pointer;
@@ -83,9 +83,27 @@ textarea.form-control {
 .blog-disp-btns.like:hover {
     background: #0011ff59;
 }
+.blog-disp-btns.like.liked {
+    background: #00f;
+    color: #fff;
+}
+
+.blog-disp-btns.like.liked:hover {
+    background: #04049e;
+    transition: 0.2s;
+}
 
 .blog-disp-btns.comment:hover {
     background: #14751c26;
+}
+
+.comment.comment-active {
+    background: #0c9417;
+    color: #fff;
+}
+
+.comment.comment-active:hover {
+    background: #04670c;
 }
 
 .blog-disp-btns.share:hover {
@@ -99,9 +117,67 @@ textarea.form-control {
 }
 
 .blog-content {
-    padding: 2rem;
+    padding: 0;
 }
 
 .full-blog .content {
     padding: 2rem 0;
+}
+
+.comment-box {
+    position: relative;
+    height: 6rem;
+    margin-top: 1rem;
+    display: none;
+}
+
+.comment-ip {
+    top: 0;
+    position: absolute;
+    width: 100%;
+    height: 3rem;
+    background: #fff;
+    border: 1px solid #a2a2a2;
+    left: 0;
+    border-radius: 0.2rem;
+    transition: 0.2s;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 0.5rem;
+    padding-left: 1.5rem;
+}
+
+.comment-ip:focus {
+    border-color: #00f;
+    border-width: 0.1rem;
+    transition: 0.2s;
+}
+
+.comment-btn {
+    z-index: 200;
+    display: block;
+    position: absolute;
+    right: 0;
+    padding: 0.5rem 1rem;
+    height: 3rem;
+    border-radius: 0 0.2rem 0.2rem 0;
+}
+
+.comment-container {
+    border: 1px solid #aaa;
+    border-radius: 0.2rem;
+    margin: 2rem 0;
+    padding: 1rem;
+}
+
+.comment-text {
+    margin: 0;
+}
+
+.likes-display-comments {
+    padding: 1rem;
+}
+
+.comment-container .blog-heading {
+    padding-bottom: 15px;
 }

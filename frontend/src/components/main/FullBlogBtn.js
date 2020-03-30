@@ -19,7 +19,9 @@ export default class BlogBtns extends Component {
     isUserLiked() {
         const setLiked = (res) => {
             this.setState({ liked: res.msg })
+            console.log("UserLiked: ", res);
         }
+        console.log(this.props.id)
         rf.post('/api/blogs/iulb/', JSON.stringify({ id: this.props.id }))
         .then(res => setLiked(res))
         .catch(err => console.error(err))
@@ -29,7 +31,6 @@ export default class BlogBtns extends Component {
         const data = { id: this.props.id }
         const likeBlog = (res) => {
             this.setState({ liked: !this.state.liked })
-            this.props.updateBlog(res.blog);
         }
         rf.post('/api/blogs/likeblog/', JSON.stringify(data))
         .then(res => likeBlog(res))
@@ -57,7 +58,7 @@ export default class BlogBtns extends Component {
             <div className="btn-container">
                 <div className="buttons row">
                     {likeBtn}
-                    <button className="blog-disp-btns comment col-4" id="commentBtn" onClick={this.comment}>Comment</button>
+                    <button className="blog-disp-btns comment col-4" onClick={this.comment}>Comment</button>
                     <button className="blog-disp-btns share col-4" onClick={this.share}>Share</button>
                 </div>
             </div>

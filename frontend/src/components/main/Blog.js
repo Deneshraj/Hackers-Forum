@@ -3,6 +3,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { getCookie } from '../common/Cookies';
 import rf from '../../modules/RestFetch';
 import BlogBtns from './BlogBtns';
+import Comments from './Comments';
 
 export default class Blog extends Component {
     constructor(props) {
@@ -11,11 +12,13 @@ export default class Blog extends Component {
             username: "",
             profilePic: "",
             createdAt: "",
+            blog: this.props.blog
         }
 
         this.fetchUser = this.fetchUser.bind(this);
         this.getDate = this.getDate.bind(this);
         this.redirectToURL = this.redirectToURL.bind(this);
+        this.updateBlog = this.updateBlog.bind(this);
 
         this.getDate();
         this.fetchUser();
@@ -37,6 +40,10 @@ export default class Blog extends Component {
         this.state.createdAt = time;
     }
 
+    updateBlog(blog) {
+        this.setState({ blog: blog });
+    }
+
     fetchUser() {
         const updateState = (username, profilePic) => this.setState({ username, profilePic })
         const data = JSON.stringify({ 'user_id': this.props.blog.user });
@@ -47,6 +54,10 @@ export default class Blog extends Component {
 
     redirectToURL(id) {
         location.href = "/blog/" + id;
+    }
+
+    showComment(e) {
+        console.log(e);
     }
 
     render() {
@@ -82,22 +93,21 @@ export default class Blog extends Component {
             }
         }
 
+        let buttonsComponent = null;
+        let commentId = "blogComment" + this.props.blogNum;
+
         if(this.props.deleteBlog) {
-            return (
-                <div className="blog-container">
-                    <div className="content-container" onClick={this.redirectToURL.bind(this, this.props.blog.id)}>
-                        <h3 className="blog-heading">{this.props.blog.title}</h3>
-                        <p className="blog-content">{this.props.blog.content}</p>
-                    </div>
-                    <BlogBtns id={this.props.blog.id} />
-                    <div className="blog-btns row">
-                        <button onClick={this.props.updateBlog.bind(this, this.props.blog.id)} className="btn btn-success col-sm-6">Update</button>
-                        <button className="btn btn-danger col-sm-6" onClick={this.props.deleteBlog.bind(this, this.props.blog.id)}>Delete</button>
-                    </div>
+            buttonsComponent = (
+                <div className="blog-btns row">
+                    <button onClick={this.props.updateBlog.bind(this, this.props.blog.id)} className="btn btn-success col-sm-6">Update</button>
+                    <button className="btn btn-danger col-sm-6" onClick={this.props.deleteBlog.bind(this, this.props.blog.id)}>Delete</button>
                 </div>
             )
         } else {
-            return (
+            buttonsComponent = null;
+        }
+        return (
+            <div>
                 <div className="blog-container">
                     <div className="content-container" onClick={this.redirectToURL.bind(this, this.props.blog.id)}>
                         <div className="blog-heading">
@@ -109,12 +119,17 @@ export default class Blog extends Component {
                                 <span className="faded">{displayText}</span>
                             </div>
                         </div>
-                        <h6 className="blog-title">{this.props.blog.title}</h6>
-                        <p className="blog-content">{this.props.blog.content}</p>
+                        <h6 className="blog-title">{this.state.blog.title}</h6>
+                        <p className="blog-content">{this.state.blog.content}</p>
+                        <div className="likes-display">
+                            <span className="faded">{this.state.blog.likes_count} Likes</span>
+                        </div>
                     </div>
-                    <BlogBtns id={this.props.blog.id} />
+                    {buttonsComponent}
+                    <BlogBtns id={this.state.blog.id} commentId={commentId} updateBlog={this.updateBlog.bind(this)} />
                 </div>
-            )
-        }
+                <Comments blogId={this.state.blog.id} commentId={commentId} />
+            </div>
+        )
     }
 }
