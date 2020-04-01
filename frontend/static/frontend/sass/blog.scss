@@ -1,10 +1,9 @@
 .blog-container {
-    border: 1px solid #a2a2a2;
     overflow: hidden;
     margin: 1rem auto;
     border-radius: 0.2rem;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
 }
-
 .content-container {
     display: block;
     text-decoration: none;
@@ -18,7 +17,7 @@
 .content-container:focus {
     text-decoration: none;
     color: #000;
-    background: #1818bb10;
+    background: #504f4f1c;
     cursor: pointer;
 }
 
@@ -68,9 +67,6 @@ textarea.form-control {
     border: none;
     padding: 0.5rem;
     text-align: center;
-    border-right: 1px solid #aaa;
-    border-top: 1px solid #aaa;
-    border-bottom: 1px solid #aaa;
     transition: 0.2s;
     outline: none !important;
 }
@@ -117,7 +113,7 @@ textarea.form-control {
 }
 
 .blog-content {
-    padding: 0;
+    padding: 2rem;
 }
 
 .full-blog .content {

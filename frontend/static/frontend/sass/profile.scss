@@ -1,0 +1,47 @@
+.profile-profilepic {
+    width: 100px;
+    height: 100px;
+}
+
+.profile-header {
+    background: #fff;
+    padding: 2rem;
+}
+
+.profile-blogs {
+    background: #fff;
+    padding: 5%;
+    margin: 2rem 0;
+}
+
+.profile-username {
+    display: inline-block;
+    margin-left: 2rem;
+}
+
+.profile-username {
+    display: inline-block;
+    margin-left: 2rem;
+    font-size: 2rem;
+}
+
+.profile-header-btn-container {
+    margin: 2rem 0;
+}
+
+.request {
+    width: 20%;
+    padding: 0.5rem;
+    background: #1b1bff;
+    box-shadow: none !important;
+    outline: none !important;
+    color: #fff;
+    border: none;
+    border-radius: 2rem;
+    transition: 0.2s;
+}
+
+.request:hover {
+    background: #1818bb;
+    transition: 0.2s;
+}

@@ -115,7 +115,7 @@ export default class Blog extends Component {
                                 <img src={this.state.profilePic} className="profile-pic" />
                             </div>
                             <div className="username-container">
-                                <a className="username" href="#">{this.state.username}</a>
+                                <a className="username" href={"/profile/" + this.state.username + "/"}>{this.state.username}</a>
                                 <span className="faded">{displayText}</span>
                             </div>
                         </div>

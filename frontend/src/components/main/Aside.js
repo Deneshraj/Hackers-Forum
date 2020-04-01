@@ -9,7 +9,7 @@ export default class Aside extends Component {
                         <img src={this.props.profilePic} className="aside-profile-pic" />
                     </div>
                     <div className="aside-username">
-                        <a href="#" className="aside-username-link">{this.props.username}</a>
+                        <a href={'/profile/' + this.props.username } className="aside-username-link">{this.props.username}</a>
                     </div>
                 </aside>
             </div>

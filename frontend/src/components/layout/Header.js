@@ -41,6 +41,9 @@ export default class Header extends Component {
                                 <NavLink to="/settings" id="settings" changeClass={changeActive}>settings</NavLink>
                             </li>
                             <li className="nav-item">
+                                <NavLink to={"/profile/" + this.props.username} id="logout" changeClass={changeActive}>profile</NavLink>
+                            </li>
+                            <li className="nav-item">
                                 <NavLink to="/logout" id="logout" changeClass={changeActive}>logout</NavLink>
                             </li>
                         </ul>

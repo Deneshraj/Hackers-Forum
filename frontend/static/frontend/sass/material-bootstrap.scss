@@ -1,0 +1,37 @@
+a {
+    color: #2d1996;
+    text-decoration: none;
+    background-color: transparent;
+    -webkit-text-decoration-skip: objects;
+}
+
+.custom-file-control, .form-control, .is-focused .custom-file-control, .is-focused .form-control {
+    background-image: linear-gradient(0deg,#020096 2px,rgba(0,150,136,0) 0),linear-gradient(0deg,rgba(0,0,0,.26) 1px,transparent 0);
+}
+
+.btn-primary.active.custom-file-control:before,
+.btn-primary.custom-file-control:active:before,
+.btn-primary.custom-file-control:focus:before,
+.btn-primary.custom-file-control:hover:before,
+.btn-primary.focus.custom-file-control:before,
+.btn.btn-primary.active, .btn.btn-primary.focus,
+.btn.btn-primary:active, .btn.btn-primary:focus,
+.btn.btn-primary:hover, 
+.open>.btn-primary.dropdown-toggle.custom-file-control:before, 
+.open>.btn.btn-primary.dropdown-toggle {
+    color: #001296;
+    background-color: hsla(0,0%,60%,.2);
+    border-color: hsla(0,0%,60%,.2);
+}
+
+.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+    color: #fff;
+    background-color: #010063;
+    border-color: #000156;
+}
+
+.btn-primary.custom-file-control:before, .btn.btn-primary {
+    color: #002096;
+    background-color: transparent;
+    border-color: #ccc;
+}

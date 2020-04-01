@@ -1,17 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Blogs from './main/Blogs';
-import PageNotFound from './PageNotFound';
 import Header from './layout/Header';
-import Logout from './main/Logout';
-import Index from './main/Index';
-import Settings from './main/Settings';
-import About from './main/About';
-import UpdateBlog from './main/UpdateBlog';
-import FullBlog from './main/FullBlog';
-import Aside from './main/Aside';
 import rf from '../modules/RestFetch';
+import Profile from './main/Profile';
+import MainRoute from './main/MainRoute';
 
 export default class App extends Component {
     constructor(props) {
@@ -35,23 +28,13 @@ export default class App extends Component {
     render() {
         return (
             <Router>
-                <Header />
+                <Header username={this.state.username} />
                 <div className="container">
-                    <div className="row">
-                        <Aside username={this.state.username} profilePic={this.state.profilePic} />
-                        <div className="col-sm-8 containers">
-                            <Switch>
-                                <Route exact path="/" component={Index} />
-                                <Route exact path="/blogs" component={Blogs} />
-                                <Route exact path="/settings" component={Settings} />
-                                <Route exact path="/logout" component={Logout} />
-                                <Route exact path="/about" component={About} />
-                                <Route exact path='/blog/:id' component={FullBlog} />
-                                {/* Default Page Handling */}
-                                <Route path="/" component={PageNotFound} />
-                            </Switch>
-                        </div>
-                    </div>
+                    <Switch>
+                        <Route exact path='/profile/:username' component={Profile} />
+                        {/* <Route path="/" component={(props) => <MainRoute {...props} username={this.state.username} profilePic={this.state.profilePic} />} /> */}
+                        <MainRoute username={this.state.username} profilePic={this.state.profilePic} />
+                    </Switch>
                 </div>
             </Router>
         )

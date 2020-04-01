@@ -35,11 +35,12 @@ body {
     padding: 1rem;
 }
 
-
+@import 'material-bootstrap.scss';  
 @import 'general.scss';
 @import 'auth.scss';
 @import 'navbar.scss';
 @import 'index.scss';
 @import 'blog.scss';
 @import 'settings.scss';
+@import 'profile.scss';
 @import 'responsive.scss';
